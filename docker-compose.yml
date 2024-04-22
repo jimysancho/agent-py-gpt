@@ -24,7 +24,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - git-db
+      - python-gpt-db
     environment:
       DB_NAME: ${POSTGRES_DB}
       DB_USER: ${POSTGRES_USER}
