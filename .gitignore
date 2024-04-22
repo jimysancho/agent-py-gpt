@@ -10,3 +10,5 @@ examples/
 .git/
 .env*
 .mypy_cache/
+name.txt
+node_relationships.txt
