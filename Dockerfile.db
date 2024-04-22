@@ -1,0 +1,16 @@
+FROM postgres:16-alpine
+
+RUN apk update && apk add --no-cache \
+    build-base \
+    postgresql-dev \
+    wget \
+    unzip \
+    git
+
+RUN cd /tmp \
+    && git clone --branch v0.5.1 https://github.com/pgvector/pgvector.git \
+    && cd pgvector \
+    && make \
+    && make install
+
+COPY ./init.sql /docker-entrypoint-initdb.d/

@@ -1,0 +1,13 @@
+.DS_Store
+backup
+__pycache__
+*.txt
+user_code/
+files_structure/
+.git
+examples/
+*.ipynb
+.venv/
+.git/
+.env*
+.mypy_cache/
