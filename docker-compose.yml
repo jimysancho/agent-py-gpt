@@ -1,7 +1,7 @@
 version: '0.0'
 services:
-  git-db:
-    container_name: git-db
+  python-gpt-db:
+    container_name: python-gpt-db
     build: 
       context: .
       dockerfile: Dockerfile.db
@@ -14,8 +14,8 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres:/var/lib/postgresql/data/
-  git-app:
-    container_name: git-app
+  python-gpt-app:
+    container_name: python-gpt-app
     build: 
       context: .
       dockerfile: Dockerfile.app
@@ -38,14 +38,14 @@ services:
       RELATIONSHIPS_FILE: ${RELATIONSHIPS_FILE}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       RELATIVE_DIFF: 0.05
-  git-st: 
-    container_name: git-st
+  python-gpt-st: 
+    container_name: python-gpt-st
     build: 
       context: . 
       dockerfile: Dockerfile
     depends_on: 
-      - git-db
-      - git-app
+      - python-gpt-app
+      - python-gpt-db
     ports: 
       - "8501:8501"
 
