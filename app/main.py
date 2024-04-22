@@ -47,6 +47,9 @@ async def upload_file_zip(file: UploadFile = File(...), db: Session = Depends(ge
             shutil.rmtree(f"{extract_dir}/.venv")
         if os.path.exists(f"{extract_dir}/.ipynb_checkpoints"):
             shutil.rmtree(f"{extract_dir}/.ipynb_checkpoints")
+    
+    else:
+        shutil.rmtree(extract_dir)
 
     db.query(models.File).delete()
     py_files = []
