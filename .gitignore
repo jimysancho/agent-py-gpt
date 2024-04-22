@@ -1,7 +1,6 @@
 .DS_Store
 backup
 __pycache__
-*.txt
 user_code/
 files_structure/
 .git

@@ -1,0 +1,7 @@
+fastapi[all]
+numpy 
+openai 
+pgvector
+psycopg2-binary
+pydantic 
+sqlalchemy
