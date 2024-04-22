@@ -2,7 +2,7 @@ import streamlit as st
 import httpx, asyncio 
 
 
-API_ENDPOINT = "http://localhost:3000/"
+API_ENDPOINT = "http://git-app:3000/"
 TIMEOUT = 60
 async def send_api_request(input_data):
     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
@@ -57,6 +57,7 @@ async def main():
             files_updated = await upload_file(uploaded_file)
             st.success("File uploaded successfully")
             st.json({'files': files_updated})
+        uploaded_file = None
             
 if __name__ == "__main__":
     import asyncio

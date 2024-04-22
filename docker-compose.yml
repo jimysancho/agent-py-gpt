@@ -38,6 +38,16 @@ services:
       RELATIONSHIPS_FILE: ${RELATIONSHIPS_FILE}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       RELATIVE_DIFF: 0.05
+  git-st: 
+    container_name: git-st
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    depends_on: 
+      - git-db
+      - git-app
+    ports: 
+      - "8501:8501"
 
 volumes:
   postgres:
