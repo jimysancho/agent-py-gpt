@@ -32,6 +32,6 @@ These are the kind of relationships that can be obtained to improve the context 
 
 When you update your code, all the files will be saved on a folder called user_code inside the folder of this cloned repository. The files will be saved according to your zip file (the operation is just an unzip function). 
 
-**If you want to update your code, you don't need to make changes and upload the zip file again!. Just make the changes inside the user_code folder, save them and click on the `Update your database` button!**. 
+**If you want to update your code, you don't need to make changes and upload the zip file again! Just make the changes inside the user_code folder, save them and click on the `Update your database` button!**. 
 
 The changed files will be rewritten in your database and new relationships will be computed! 
