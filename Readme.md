@@ -63,4 +63,5 @@ The changed files will be rewritten in your database and new relationships will 
 
 You can also control the relationships extraction depth. What if the retrieved relationships of the retrieved node also has more relationsihps? You can go deeper to get the relationships of these relationships by controlling the depth parameter of the retriever. In `app/app.py` file: 
 
+<img width="973" alt="Screenshot 2024-05-08 at 10 39 02" src="https://github.com/jimysancho/python-gpt/assets/105709376/9a80d56a-0842-4546-8c35-ab2b6e26d0b9">
 
