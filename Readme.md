@@ -59,3 +59,8 @@ When you update your code, all the files will be saved on a folder called user_c
 **If you want to update your code, you don't need to make changes and upload the zip file again! Just make the changes inside the user_code folder, save them and click on the `Update your database` button!**. 
 
 The changed files will be rewritten in your database and new relationships will be computed! 
+
+
+You can also control the relationships extraction depth. What if the retrieved relationships of the retrieved node also has more relationsihps? You can go deeper to get the relationships of these relationships by controlling the depth parameter of the retriever. In `app/app.py` file: 
+
+
