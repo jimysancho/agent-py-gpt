@@ -32,15 +32,15 @@ These are the kind of relationships that can be obtained to improve the context 
 
 I've created a knowledge base using this respository itself! Let's see what results we get using **llama3-8b**. 
 
-- Query: 
+### 1. Query: 
 <img width="865" alt="Screenshot 2024-05-08 at 09 09 44" src="https://github.com/jimysancho/python-gpt/assets/105709376/01809b10-e0f6-4c2c-927b-df31fc8a27bb">
 
-- Retrieved node: 
+### 2. Retrieved node: 
 <img width="834" alt="Screenshot 2024-05-08 at 09 10 14" src="https://github.com/jimysancho/python-gpt/assets/105709376/c44b4bea-233c-4470-af78-9799a82413d5">
 
 **Perfect match**
 
-- Relationships found: 
+### 3. Relationships found: 
 <img width="844" alt="Screenshot 2024-05-08 at 09 10 37" src="https://github.com/jimysancho/python-gpt/assets/105709376/78688821-b13f-467a-a89c-d66f25b2c6c2">
 <img width="770" alt="Screenshot 2024-05-08 at 09 13 22" src="https://github.com/jimysancho/python-gpt/assets/105709376/03bc9e6b-2bd6-41b5-9644-fe288a07f614">
 
