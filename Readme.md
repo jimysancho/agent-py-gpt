@@ -5,7 +5,7 @@ Chat with your python repository.
 
 1. docker compose up -d 
 2. Go to: ```localhost:8501``` and upload your python code in a zip file. 
-3. Start chatting with your repository! 
+3. Start chatting with your repository!
 
 # Advantages
 
@@ -27,6 +27,24 @@ With code, the relationships `parent - child` and `prev - next` are not really u
 - If a method in some class is called somewhere else in the class, it should be noted as well. 
 
 These are the kind of relationships that can be obtained to improve the context feeding part for the LLM. 
+
+# Results
+
+I've created a knowledge base using this respository itself! Let's see what results we get using **llama3-8b**. 
+
+- Query: 
+
+- Retrieved node: 
+
+- Relationships found: 
+
+
+If you see the definition of the function `_create_file_node`, you can see that other entities are being called: 
+- File
+- _create_nodes_of_file
+- calculate_hash
+
+Which are precisely the relationships nodes that are retrieved! Why? Because these relationships are stored on the database and can be retrieved when the node in which these entities are called is retrieved! This gives the more context, context that can be used if neccesary. This can be leveraged using several techniques: prompt engineering, llm decision making, etc. 
 
 # Comments
 
