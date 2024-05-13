@@ -47,8 +47,12 @@ async def main():
         with st.spinner("Loading message..."):
             response = await send_api_request(input_data)
             answer, file, parent, relations, nodes = response['answer'], response['file_of_context'], response['parent_of_context'], response['most_similar_relations'], response['nodes']
+            short_text_relations = {}
+            max_n_words = 250
+            for relation_id, text in relations.items():
+                short_text_relations[relation_id] = " ".join([word for word in text.split(" ")[:max_n_words]])
             st.success(answer)
-            st.json({'file': file, 'parent_node': parent, 'relations': relations, 'nodes': nodes})
+            st.json({'file': file, 'parent_node': parent, 'relations': short_text_relations, 'nodes': nodes})
     st.write("---")
 
     uploaded_file = st.file_uploader("Upload .zip File", key="upload_zip_file")
