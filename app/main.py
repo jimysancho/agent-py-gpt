@@ -10,7 +10,7 @@ from .nodes.create_nodes import _create_file_node, create_embedding, _create_nod
 from .nodes.node_postprocessor import NodePostProccesor
 from .openai_utils import send_request_to_chatgpt
 
-import os, shutil
+import os, shutil, httpx, json
 from zipfile import ZipFile
 
 models.Base.metadata.create_all(bind=engine)
@@ -138,7 +138,7 @@ async def query_vector_database(request: Request, db: Session = Depends(get_db))
     most_similar_relationships = {}
     nodes = [db.get(models.Node, node_info[0]) for node_info in return_nodes]
     # we get the different functions / classes that appear on the retrieved nodes for more context
-    relations = node_post_proccesor._check_relationships_of_retrieved_nodes(nodes=nodes, depth=2)
+    relations = node_post_proccesor._check_relationships_of_retrieved_nodes(nodes=nodes, depth=1)
     relationships_nodes = {}
     for node_id in relations:
         if node_id in relationships_nodes or node_id in [node_info[0] for node_info in return_nodes]: continue
@@ -210,19 +210,48 @@ async def query_chatgpt(request: Request,
         "messages" : [
             {'role': 'system', 'content': f"""
              You are an expert python programmer. You are very good at explaining things in a way that a complete beginer will understand. You remain technical. In your answers, you include the code you are referring to as you explain what it does so that the user will not be lost in the explanation.\n
+             If you do not know how to answer the question, you will ask for more details being specific. For example, if you need to know how a function behavies, you will ask for the definition of that function. \n
              This is the information you have to answer the user: \n 
              --------------------- CODE ------------------ \n
              {context_for_chatgpt} \n 
              {refine_context} \n 
              --------------------- CODE ------------------- \n 
              \n 
-             If you do not know how to answer the question, you will ask for more details being specific. For example, if you need to know how a function behavies, you will ask for the definition of that function. 
+             Only use the information needed to answer the user question
             """},
             {'role': 'user', 'content': query}
         ]
     }
 
-    original_answer = await send_request_to_chatgpt(headers=headers, data=data)
+    # original_answer = await send_request_to_chatgpt(headers=headers, data=data)
+    prompt = f"""
+             You are an expert python programmer. You are very good at explaining things in a way that a complete beginer will understand. You remain technical. In your answers, you include the code you are referring to as you explain what it does so that the user will not be lost in the explanation.\n
+             If you do not know how to answer the question, you will ask for more details being specific.\n
+             This is the information you have to answer the user: \n 
+             --------------------- CODE ------------------ \n
+             {context_for_chatgpt} \n 
+             {refine_context} \n 
+             --------------------- CODE ------------------- \n 
+             \n 
+             Only use the information needed to answer the user question
+            """
+            
+    data = {
+        "model": "llama3", 
+        "prompt": prompt, 
+        "stream": False
+    }
+    
+    try:
+        async with httpx.AsyncClient(timeout=90) as client:
+            print("Asking ollama...")
+            response = await client.post("http://host.docker.internal:11434/api/generate", data=json.dumps(data)) 
+            
+        print(response.json())
+        original_answer = response.json()['response']
+    except Exception as e:
+        original_answer = f"Could not get a response because of: {e}"
+    
     return {"answer": original_answer, 
             "file_of_context": file_ids, 
             "parent_of_context": parent_ids, 
