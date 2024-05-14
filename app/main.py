@@ -6,9 +6,9 @@ from .database import models
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, File, UploadFile
 
-from .nodes.create_nodes import _create_file_node, create_embedding, _create_node_relationships_file
+from .nodes.pychunk_nodes_creation import create_nodes
 from .nodes.node_postprocessor import NodePostProccesor
-from .openai_utils import send_request_to_chatgpt
+from .openai_utils import create_embedding
 
 import os, shutil, httpx, json
 from zipfile import ZipFile
@@ -19,12 +19,6 @@ app = FastAPI()
 @app.get("/")
 async def main_page():
   return {'msg': 'welcome to the main page!'}
-
-@app.post("/update_nodes_store")
-async def update_nodes_store(db: Session = Depends(get_db)):
-    updated_files = _create_file_node(path=os.environ['USER_CODE_DIRECTORY'], db=db)
-    _create_node_relationships_file(db=db, delete_all_first=True)
-    return {"py_files": updated_files}
 
 @app.post("/create_nodes_store")
 async def upload_file_zip(file: UploadFile = File(...), db: Session = Depends(get_db)):
@@ -51,20 +45,7 @@ async def upload_file_zip(file: UploadFile = File(...), db: Session = Depends(ge
     else:
         shutil.rmtree(extract_dir)
 
-    db.query(models.File).delete()
-    py_files = []
-    for root, _, files in os.walk(extract_dir):
-        for file in files:
-            if file == '__init__.py':
-                os.remove(os.path.join(root, file))
-                continue
-            if file.endswith(".py"):
-                py_files.append(os.path.join(root, file))
-            else:
-                os.remove(os.path.join(root, file))
-
-    _create_file_node(path=os.environ['USER_CODE_DIRECTORY'], db=db)
-    _create_node_relationships_file(db=db)
+    py_files = create_nodes(path=extract_dir, db=db)
     return {"py_files": py_files}
 
 @app.get("/get_text_from_node/{node_id}", response_model=None)
@@ -196,32 +177,9 @@ async def query_chatgpt(request: Request,
     
     if not only_most_similar_relations:
         only_most_similar_relations = relations_of_retrieved_nodes
-        
-    headers = {
-        'Authorization': f"Bearer {os.environ['OPENAI_API_KEY']}",
-        'Content-Type': 'application/json'
-        }
-        
+     
     context_for_chatgpt = "".join([node_info[1] for node_info in retrieved_nodes])
     refine_context = "".join([rel_node[0] for m, rel_node in enumerate(most_similar_relations_of_retrieved_nodes.values()) if m < max_rel])
-                    
-    data = {
-        'model': "gpt-3.5-turbo", 
-        "messages" : [
-            {'role': 'system', 'content': f"""
-             You are an expert python programmer. You are very good at explaining things in a way that a complete beginer will understand. You remain technical. In your answers, you include the code you are referring to as you explain what it does so that the user will not be lost in the explanation.\n
-             If you do not know how to answer the question, you will ask for more details being specific. For example, if you need to know how a function behavies, you will ask for the definition of that function. \n
-             This is the information you have to answer the user: \n 
-             --------------------- CODE ------------------ \n
-             {context_for_chatgpt} \n 
-             {refine_context} \n 
-             --------------------- CODE ------------------- \n 
-             \n 
-             Only use the information needed to answer the user question
-            """},
-            {'role': 'user', 'content': query}
-        ]
-    }
 
     # original_answer = await send_request_to_chatgpt(headers=headers, data=data)
     prompt = f"""
@@ -247,10 +205,10 @@ async def query_chatgpt(request: Request,
             print("Asking ollama...")
             response = await client.post("http://host.docker.internal:11434/api/generate", data=json.dumps(data)) 
             
-        print(response.json())
         original_answer = response.json()['response']
     except Exception as e:
         original_answer = f"Could not get a response because of: {e}"
+        print(response.json())
     
     return {"answer": original_answer, 
             "file_of_context": file_ids, 
