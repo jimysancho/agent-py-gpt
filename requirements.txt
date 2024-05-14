@@ -5,3 +5,4 @@ pgvector
 psycopg2-binary
 pydantic 
 sqlalchemy
+rag-pychunk
