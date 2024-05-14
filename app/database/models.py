@@ -4,16 +4,10 @@ from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship, backref
 from pgvector.sqlalchemy import Vector
 import sqlalchemy
+from pychunk.nodes.base import NodeType
 
 import uuid, enum
     
-
-class NodeType(enum.Enum):
-    MODULE = "MODULE"
-    METHOD = "METHOD"
-    CLASS = "CLASS"
-    FUNCTION = "FUNCTION"
-    CODE = "CODE"
 
 class File(Base):
 
