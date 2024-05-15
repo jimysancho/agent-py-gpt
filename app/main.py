@@ -1,20 +1,21 @@
 from fastapi import FastAPI, Depends, HTTPException, Request
 
-from .database.base import get_db, engine
-from .database import models
+from app.database.base import get_db, engine
+from app.database import models
 
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, File, UploadFile
 
-from .nodes.pychunk_nodes_creation import create_nodes
-from .nodes.node_postprocessor import NodePostProccesor
-from .openai_utils import create_embedding
+from app.nodes.pychunk_nodes_creation import create_nodes
+from app.nodes.node_postprocessor import NodePostProccesor
+from app.embeddings import HugginFaceEmbeddings
 
 import os, shutil, httpx, json
 from zipfile import ZipFile
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+embeddings = HugginFaceEmbeddings()
 
 @app.get("/")
 async def main_page():
@@ -129,7 +130,7 @@ async def query_vector_database(request: Request, db: Session = Depends(get_db))
         scores_of_node = []
         ids = []
         for id, text in relationships_nodes.items():
-            similarity = 1 - np.cos(np.dot(np.array(create_embedding(query=node.text)), np.array(create_embedding(query=text))))
+            similarity = 1 - np.cos(np.dot(np.array(embeddings(node.text)), np.array(embeddings(text))))
             scores_of_node.append(similarity)
             ids.append(id)
         if not len(scores_of_node): continue
@@ -203,7 +204,7 @@ async def query_chatgpt(request: Request,
     try:
         async with httpx.AsyncClient(timeout=90) as client:
             print("Asking ollama...")
-            response = await client.post("http://host.docker.internal:11434/api/generate", data=json.dumps(data)) 
+            response = await client.post("http://localhost:11434/api/generate", data=json.dumps(data)) 
             
         original_answer = response.json()['response']
     except Exception as e:

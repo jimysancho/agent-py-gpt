@@ -15,7 +15,6 @@ class HugginFaceEmbeddings:
     def __init__(self):
         self._model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
         
-    @classmethod
     def _get_embedding_from_word(self, word: str | List[str]) -> List[float]:
         return list(self._model.get_text_embedding(word))
     

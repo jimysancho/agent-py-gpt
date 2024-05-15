@@ -6,7 +6,7 @@ from pgvector.sqlalchemy import Vector
 import sqlalchemy
 from pychunk.nodes.base import NodeType
 
-import uuid, enum
+import uuid
     
 
 class File(Base):
@@ -40,7 +40,7 @@ class Node(Base):
     next_node_id = Column(UUID(as_uuid=True), ForeignKey("node.id"), nullable=True)
     
     text = Column(Text, nullable=False)
-    embedding_text_1536 = Column(Vector(1536))
+    embedding = Column(Vector(384))
     hash = Column(String, nullable=False, index=True)
     node_relationships = Column(JSONB)
     
@@ -55,7 +55,7 @@ class Node(Base):
         
 index = Index(
     'node_search_index',
-    Node.embedding_text_1536,
+    Node.embedding,
     postgresql_using='ivfflat',
     postgresql_with={'lists': 100},
     postgresql_ops={'embedding': 'vector_l2_ops'}

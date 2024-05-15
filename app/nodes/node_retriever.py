@@ -1,15 +1,17 @@
-from .create_nodes import create_embedding
+from app.embeddings import HugginFaceEmbeddings
 import psycopg2
 from pgvector.psycopg2 import register_vector
-from ..database.base import SQLALCHEMY_DATABASE_URL
-from ..database.models import Node, File, NodeWithScore
+from app.database.base import SQLALCHEMY_DATABASE_URL
+from app.database.models import Node, File, NodeWithScore
 from sqlalchemy.orm import Session
     
 class NodeRetriever:
     
+    embedding_model = HugginFaceEmbeddings()
+    
     def __init__(self, query: str, db: Session):
         self._query = query 
-        self._embedding = create_embedding(query=query)
+        self._embedding = self.embedding_model(query)
         self._db = db
         
     def _retrieve_nodes(self):
@@ -17,7 +19,7 @@ class NodeRetriever:
         register_vector(conn)
         cur = conn.cursor()
         cur.execute("""
-            SELECT id, 1 - cosine_distance(embedding_text_1536, %s::vector) AS similarity 
+            SELECT id, 1 - cosine_distance(embedding, %s::vector) AS similarity 
             FROM node 
             ORDER BY similarity DESC 
             LIMIT 5;

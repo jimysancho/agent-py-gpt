@@ -2,7 +2,7 @@ import streamlit as st
 import httpx, asyncio 
 
 
-API_ENDPOINT = "http://python-gpt-app:3000/"
+API_ENDPOINT = "http://host.docker.internal:3000/"
 TIMEOUT = 60
 async def send_api_request(input_data):
     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
