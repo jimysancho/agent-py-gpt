@@ -1,14 +1,28 @@
-import httpx, json, random, asyncio 
+import httpx
+import json
+import random
+import asyncio 
+
 from httpx import Timeout
+
+from typing import List
 import os
-from openai import OpenAI
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
-openai_client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
-def create_embedding(query: str):
-    query = query.replace("\n", "")
-    return openai_client.embeddings.create(input=[query], model='text-embedding-3-small').data[0].embedding
+class HugginFaceEmbeddings:
     
+    def __init__(self):
+        self._model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
+        
+    @classmethod
+    def _get_embedding_from_word(self, word: str | List[str]) -> List[float]:
+        return list(self._model.get_text_embedding(word))
+    
+    def __call__(self, word: str | List[str]) -> List[float]:
+        return self._get_embedding_from_word(word)
+
+
 async def send_request_to_chatgpt(headers, data):
     
     retries = 3
