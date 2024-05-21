@@ -12,5 +12,5 @@ class Prompt:
     @classmethod  
     def format_prompt(cls, prompt: str, **kwargs) -> Type['Prompt']:
         for key, value in kwargs.items():
-            prompt = prompt.replace(f"{{{key}}}", value)
+            prompt = prompt.replace(f"{{{key}}}", str(value))
         return cls(prompt=prompt)
