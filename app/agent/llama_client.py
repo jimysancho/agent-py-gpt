@@ -5,39 +5,7 @@ import random
 
 from app.prompts.prompt import Prompt
 
-from g4f.client import AsyncClient
 
-class GPTClient:
-    
-    n_retries = 3
-    _timeout = 90
-    _client = AsyncClient()
-    
-    async def acall(self, query: str) -> str | None:
-        retries = 0
-        
-        while retries <= self.n_retries:
-            try:
-                answer = await self._acall(query=query)
-                return answer
-            except (httpx.ConnectTimeout, httpx.ReadTimeout) as e:
-                if retries == self.n_retries:
-                    print("Could not get answer from llama --> Timeout")
-                    raise e 
-                retries += 1
-                print("Could not get answer from llama because of time out. Trying again --> ", retries)
-                await asyncio.sleep(random.random() * retries / 4)
-            
-        return None
-    
-    async def _acall(self, query: str) -> str: 
-        
-        response = await self._client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": query}]
-        )
-        return response
-            
 class LlamaClient:
     
     n_retries = 3
