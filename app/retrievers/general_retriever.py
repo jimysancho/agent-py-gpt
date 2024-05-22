@@ -1,6 +1,7 @@
 import psycopg2
 from pgvector.psycopg2 import register_vector
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from app.database.base import SQLALCHEMY_DATABASE_URL
 from app.database.models import Node, File, NodeWithScore, NodeMetadata
@@ -10,7 +11,8 @@ from app.printer import Printer
 from typing import (List, 
                     Optional, 
                     Set, 
-                    Any)
+                    Any, 
+                    Tuple)
 
 printer = Printer()
 
@@ -23,7 +25,7 @@ class GeneralRetriever(BaseRetriever):
         nodes: List[Node] = self._db.query(Node).all()
         return nodes
     
-    def _retrieve_nodes(self, query: str):
+    def _retrieve_nodes(self, query: str) -> Tuple[List[Node], List[NodeWithScore]]:
         
         embedding = self._embedding_model(word=query)
         
@@ -39,12 +41,15 @@ class GeneralRetriever(BaseRetriever):
         
         nodes_with_distances = cur.fetchall()
         nodes = []
+        nodes_with_score = []
 
-        for node_id, _ in nodes_with_distances:
+        for node_id, distance in nodes_with_distances:
             node = self._db.get(Node, node_id)
             nodes.append(node)
+            node_with_score = NodeWithScore(node=node, score=distance)
+            nodes_with_score.append(node_with_score)
         
-        return nodes
+        return nodes, nodes_with_score
                     
     def query_database(self, query: str, subjects: Optional[Set[str]] = None) -> Any:
         
@@ -58,9 +63,27 @@ class GeneralRetriever(BaseRetriever):
             raise ValueError("To use GeneralRetriever, the len of subjects must be one.")
         
         elif len(subjects) == 1:
+            subject, = [subject for subject in subjects]
             # general questions with one subject: we can assume the user is trying to get answer questions like: is my code going to break someting? If not, the tool should be particular-related one
+            node_of_subject = self._db.query(Node).join(NodeMetadata, NodeMetadata.node_id == Node.id)\
+                    .filter(
+                        or_(
+                            NodeMetadata.node_metadata['additional_metadata']['function_name'].astext == subject,
+                            NodeMetadata.node_metadata['additional_metadata']['method_name'].astext == subject,
+                            NodeMetadata.node_metadata['additional_metadata']['class_name'].astext == subject
+                        )).all()
+
+            if len(node_of_subject) == 1:
+                printer.print_blue(f"\tExact match of subject: {subjects} in the database. --> {len(node_of_subject)}")
+                valid_node = node_of_subject[0]
+                all_nodes_related_to_this_node = self._db.query(Node).filter(Node.node_relationships.has_key(str(valid_node.id))).all()
+                relationships = []
+                for node_id in valid_node.node_relationships.keys():
+                    relationships.append(self._db.get(Node, node_id))
+                return [valid_node] + all_nodes_related_to_this_node, [NodeWithScore(node=valid_node, score=1)], {str(valid_node.id): relationships}
+
             node_metadatas = []
-            similarity_nodes: List[Node] = self._retrieve_nodes(query=query) # NOTE -> see if the others are important
+            similarity_nodes, nodes_with_score = self._retrieve_nodes(query=query) # NOTE -> see if the others are important
             top_nodes = similarity_nodes[:2]
             valid_node = None
             
@@ -101,11 +124,17 @@ class GeneralRetriever(BaseRetriever):
                     printer.print_blue(f"\t{node_metadata.node_metadata}")
                     valid_node = top_node
                     break
-
+                
+                printer.print_red(f"Could not find any node in the database for the subject: {subjects}. Getting most similar node: {nodes_with_score[0].score}")
+                valid_node = top_node[0]
+                
         valid_node_id = str(valid_node.id)
         all_nodes_related_to_this_node = self._db.query(Node).filter(Node.node_relationships.has_key(valid_node_id)).all()
+        relationships = []
+        for node_id in valid_node.node_relationships.keys():
+            relationships.append(self._db.get(Node, node_id))
         
-        return [valid_node] + all_nodes_related_to_this_node
+        return [valid_node] + all_nodes_related_to_this_node, nodes_with_score, {valid_node_id: relationships}
                     
     
 # NOTE -> for a general context, we need to find all of the nodes in which the self node 
