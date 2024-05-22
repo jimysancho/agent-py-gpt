@@ -4,13 +4,13 @@ from app.retrievers.general_retriever import GeneralRetriever
 from app.retrievers.similarity_retriever import SimilarityRetriever
 
 from app.agent.types import QuestionType, ContextType, Output
+from app.printer import Printer
 
 from typing import (List, 
                     Dict, 
                     Any, 
                     Tuple)
 
-from app.printer import Printer
 
 printer = Printer()
 
