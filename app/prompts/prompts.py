@@ -38,31 +38,30 @@ Output:
 """
 
 SIMPLE_VS_COMPLEX = """
-Based on this question: {query} classify it into two categories: [complex, simple] based on this: \n
-- Complex: more than one subject is involved in the question. \n
-- Simple: one or zero subject is involded in the question. \n
+Based on this question: {query} classify it into two categories: [complex, simple] based on this:
+- Complex: more than one subject is involved in the question.
+- Simple: one or zero subject is involded in the question.
 Important: do not assume anything. Identify the subjects only from the question. A subject can be: a function, a class, a method or a block of code. It must be explicit in the question to be a subject. If not, there is no subject. 
-These are not subjects: Arguments of functions, arguments of methods or arguments of classes, repository, files, folders are not subjects neither.\n
-\n
+These are not subjects: Arguments of functions, arguments of methods or arguments of classes, repository, files, folders are not subjects neither.
 Your output must follow this JSON format without saying anything else: 
-\n
+
 {"question_type": <question_type>, "subject": <subject(s)>, "reasoning": <your reasoning>}
-\n
+
 ---------------- EXAMPLES --------------------
-Question: "How does the function X work?" \n
-Output: \n
-{"question_type": "simple", "subject": ["X"], "reasoning": "The subject is function X therefore the answer is particular since there is only one subject"} \n
+Question: "How does the function X work?"
+Output:
+{"question_type": "simple", "subject": ["X"], "reasoning": "The subject is function X therefore the answer is simple since there is only one subject"}
 
 Question: "If I change the argument of the function f, wil that affect the rest of my code?", \n
-Output: \n
-{"question_type": "simple", "subject": ["f"], "reasoning": "The subject is the function f therefore the answer is simple because there is one subject "}\n
+Output:
+{"question_type": "simple", "subject": ["f"], "reasoning": "The subject is the function f therefore the answer is simple because there is one subject "}
  
 Question: "If i change the parameter alpha of the method _create_of_nodes, how will that affect the class Node?", 
-Output: \n
+Output:
 {"question_type": "complex", "subject": ["_create_of_nodes", "Node"], "reasoning": "The subjects are: _create_of_nodes function and Node class, therefore the answer is complex because there is more than one subject."}
 
 Question: "Is there any file called main.py?"
-Output: \n
+Output:
 {"question_type": "simple", "subject": [None], "reasoning": "main.py file is a file therefore is no subject and therefore there are no subjects, so the question is simple since there are no subjects. "}
 
 ---------------- END EXAMPLES --------------------
@@ -71,7 +70,7 @@ Output: \n
 """
 
 GENERAL_VS_PARTICULAR_CONTEXT = """
-Classify the question down below in one of two categories: [particular, complex] according to the following criteria: 
+Classify the question down below in one of two categories: [particular, general] according to the following criteria: 
 - particular: the question refer only to the subject. 
 - general: the question does not refer only to the subject or it refers to the subject in a general way.
 --------- EXAMPLES ----------
@@ -100,4 +99,16 @@ Your output must follow the next schema without saying anything else:
 Question: {query}
 Subjects: {subject}
 Output: \n
+"""
+
+PROMPT_TO_ANSWER_QUESTIONS = """
+You are an expert python programmer. You are very good at explaining things in a way that a complete beginer will understand. You remain technical. In your answers, you include the code you are referring to as you explain what it does so that the user will not be lost in the explanation.
+If you do not know how to answer the question, you will ask for more details being specific.
+This is the information you have to answer the user: 
+--------------------- CODE ------------------
+{context} \n 
+--------------------- CODE ------------------- 
+\n 
+Only use the information needed to answer the user question. 
+Question: {query}
 """
