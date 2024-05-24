@@ -1,14 +1,15 @@
 import streamlit as st
-import httpx, asyncio 
+import httpx, asyncio, os
 
 
 API_ENDPOINT = "http://host.docker.internal:3000/"
-TIMEOUT = 60
+TIMEOUT = 120
+
 async def send_api_request(input_data):
     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
         
         response = await client.post(API_ENDPOINT + "query_chatgpt",
-                                     json={'code': input_data})
+                                     json={'code': input_data, 'threshold': os.environ['THRESHOLD']})
     if response.status_code == 200:
         response_json = response.json()
         return response_json
@@ -46,13 +47,20 @@ async def main():
     if st.button("Submit"):
         with st.spinner("Loading message..."):
             response = await send_api_request(input_data)
-            answer, file, parent, relations, nodes = response['answer'], response['file_of_context'], response['parent_of_context'], response['most_similar_relations'], response['nodes']
+            answer, relationships, filtered_relationships, nodes, additional_metadata = (response['answer'], 
+                                                                                         response['relationships'], 
+                                                                                         response['filtered_relationships'], 
+                                                                                         response['nodes'], 
+                                                                                         response['additional_medatata'])
             short_text_relations = {}
             max_n_words = 250
-            for relation_id, text in relations.items():
+            for relation_id, text in filtered_relationships.items():
                 short_text_relations[relation_id] = " ".join([word for word in text.split(" ")[:max_n_words]])
             st.success(answer)
-            st.json({'file': file, 'parent_node': parent, 'relations': short_text_relations, 'nodes': nodes})
+            st.json({'additional_metadata': additional_metadata, 
+                     'relationships': relationships, 
+                     'filtered_relations': short_text_relations, 
+                     'nodes': nodes})
     st.write("---")
 
     uploaded_file = st.file_uploader("Upload .zip File", key="upload_zip_file")
@@ -61,7 +69,7 @@ async def main():
             files_updated = await upload_file(uploaded_file)
             st.success("File uploaded successfully")
             st.json({'files': files_updated})
-        uploaded_file = None
+        uploaded_file = st.file_uploader("Upload .zip File", key="upload_zip_file")
             
 if __name__ == "__main__":
     import asyncio
