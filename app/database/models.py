@@ -24,7 +24,6 @@ class NodeMetadata(Base):
     __tablename__ = "node_metadata"
     node_id = Column(UUID(as_uuid=True), ForeignKey("node.id", ondelete="CASCADE"), primary_key=True)
     node_metadata = Column(JSONB)
-    # possible field for node_metadata: parent_class, lines_of_code, etc
     
     node = relationship("Node", foreign_keys=[node_id], back_populates="node_metadata")
 
