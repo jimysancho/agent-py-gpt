@@ -22,9 +22,9 @@
 
 [Main files](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#3-main-files)
 
-- [Notebooks examples](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#31-notebook-examples) 
+- [Notebooks examples](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#31-notebooks-examples) 
 
-- [Classes](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#31-classes)
+- [Classes](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#32-classes)
 
 
 [How to use it](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#4-how-to-use-it)
