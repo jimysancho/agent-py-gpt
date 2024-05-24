@@ -6,13 +6,18 @@
 [Tools](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#2-tools)
 
 - [SimpleRetriever](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#21-simpleretriever)
+
     - - [Complex Case](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#211-complex-case)
+
 - [GeneralRetriever](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#22-generalretriever)
     - - [One Subject](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#221-one-subject)
+
     - - [Zero Subjects](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#222-zero-subjects)
 - [RelationshipRetriever](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#23-relationshipretriever-optional-or-mandatory)
     - - [Without Relationships in the context](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#231-without-the-relationships)
+
     - - [With Relationships in the context](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#232-with-the-relationships-in-the-context)
+    
     - - [Differences](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#233-differences)
 
 [Main files](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#3-main-files)
