@@ -10,8 +10,14 @@ class LlamaClient:
     
     n_retries = 3
     _timeout = 90
+    
+    def __init__(self, url: str | None = None):
+        if url is None:
+            self._url = "http://localhost:11434/api/generate"
+        else:
+            self._url = url
         
-    async def acall(self, query: str | Prompt) -> str | None:
+    async def acall(self, query: str | Prompt, url: str | None = None) -> str | None:
         if not isinstance(query, str):
             query = query.prompt
             
@@ -39,7 +45,7 @@ class LlamaClient:
                 "stream": False, 
                 "retries": 1
             }
-            response = await client.post("http://localhost:11434/api/generate", data=json.dumps(data)) 
+            response = await client.post(self._url, data=json.dumps(data)) 
             response_json = response.json()
             try:
                 answer = response_json['response']
