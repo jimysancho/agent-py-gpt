@@ -73,7 +73,7 @@ class SimilarityRetriever(BaseRetriever):
                     relationships_of_node = self._retrieve_relationships(nodes=node_of_subject, depth=depth)
                     nodes_of_relationships = []
                     for rel_id in relationships_of_node:
-                        nodes_of_relationships.extend(self._db.get(Node, rel_id))
+                        nodes_of_relationships.append(self._db.get(Node, rel_id))
                     printer.print_blue(f"Relationships of node retrieve: {len(nodes_of_relationships)}")
                     relationships[str(node_of_subject[0].id)] = nodes_of_relationships
                 continue
