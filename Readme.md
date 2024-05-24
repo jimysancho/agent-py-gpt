@@ -265,3 +265,34 @@ When you update your code, all the files will be saved on a folder called user_c
 **If you want to update your code, you don't need to make changes and upload the zip file again! Just make the changes inside the user_code folder, save them and click on the `Update your database` button!**. 
 
 The changed files will be rewritten in your database and new relationships will be computed! 
+
+Env example: 
+
+```
+export DB_USER='<user>'
+export DB_PASSWORD='<password>'
+export DB_NAME='<db-name>'
+export USER_CODE_DIRECTORY='./user_code'
+export FILES_STRUCTURE_FOLDER='./files_structure'
+export NAMES_FILE='./name.txt'
+export RELATIONSHIPS_FILE='./node_relationships.txt'
+export THRESHOLD='0.25'
+```
+
+# Problems
+
+#### 1. pgvector on docker
+If for some reason you can't install pgvector on the docker image for postgres, remove the part of pgvector and create it manually. 
+
+```
+FROM postgres:16-alpine
+
+RUN apk update && apk add --no-cache \
+    build-base \
+    postgresql-dev \
+    wget \
+    unzip \
+    git
+```
+
+Then follow the instructions of pgvector to create the extension on the database you wanted. 
