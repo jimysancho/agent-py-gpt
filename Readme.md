@@ -37,7 +37,7 @@
 
 # Chat with your python repository in an advanced-way
 
-The idea of this project is to use Agents to improve the RAG pipeline over python repositories. Why over python repositories? Because I'm going to use the `rag-pychunk` library to obtain better relationships between them. Also, this project uses Postgresql to store the vectors and documents, but you can implement the same logic in any database. The important part is the parsing form *rag-pychunk-Nodes* to your model, maintaining and keeping the important information (as we'll see in section 2, we'll try to get the node by matching some values in the database). 
+The idea of this project is to use Agents to improve the RAG pipeline over python repositories. Why over python repositories? Because I'm going to use the [`rag-pychunk`](https://github.com/jimysancho/rag-pychunk) library to obtain better relationships between them. Also, this project uses Postgresql to store the vectors and documents, but you can implement the same logic in any database. The important part is the parsing form *rag-pychunk-Nodes* to your model, maintaining and keeping the important information (as we'll see in section 2, we'll try to get the node by matching some values in the database). 
 
 In order to use agents, I've classified the possible queries into different categories: 
 - Simple vs Complex. 
@@ -66,7 +66,7 @@ When the agent pipeline returns a tool, I'll use that tool to obtained the nodes
 
 ## 1. Chunking and Node models
 
-To chunk the different files I'll be using *rag-pychunk*, which is a library I've developed to leverage python programming language syntax improving the chunking and relationship finding. You can learn more about that here: https://github.com/jimysancho/rag-pychunk 
+To chunk the different files I'll be using *rag-pychunk*, which is a library I've developed to leverage python programming language syntax improving the chunking and relationship finding. You can learn more about that here: [rag-pychunk](https://github.com/jimysancho/rag-pychunk)
 
 
 **Node Model**
