@@ -52,12 +52,12 @@ class GeneralRetriever(BaseRetriever):
         return nodes, nodes_with_score
                     
     def query_database(self, query: str, subjects: Optional[Set[str]] = None) -> Any:
-        
-        if subjects is None: subjects = {}
+
+        if (subjects is None) or (None in subjects) or ("none" in [str(s.lower()) for s in subjects]): subjects = {}
         
         if len(subjects) < 1:
             nodes: List[Node] = self._retrieve_general_nodes()
-            # NOTE -> what strategy to follow here
+            return nodes, None, None
         
         elif len(subjects) > 1:
             raise ValueError("To use GeneralRetriever, the len of subjects must be one.")
@@ -82,9 +82,10 @@ class GeneralRetriever(BaseRetriever):
                     relationships.append(self._db.get(Node, node_id))
                 return [valid_node] + all_nodes_related_to_this_node, [NodeWithScore(node=valid_node, score=1)], {str(valid_node.id): relationships}
 
+            printer.print_blue("Could not get the exact Node. Similarity search...")
             node_metadatas = []
-            similarity_nodes, nodes_with_score = self._retrieve_nodes(query=query) # NOTE -> see if the others are important
-            top_nodes = similarity_nodes[:2]
+            similarity_nodes, nodes_with_score = self._retrieve_nodes(query=query)
+            top_nodes = similarity_nodes[:2] # NOTE -> see if the others are important
             valid_node = None
             
             for top_node in top_nodes:
@@ -126,7 +127,7 @@ class GeneralRetriever(BaseRetriever):
                     break
                 
                 printer.print_red(f"Could not find any node in the database for the subject: {subjects}. Getting most similar node: {nodes_with_score[0].score}")
-                valid_node = top_node[0]
+                valid_node = top_nodes[0]
                 
         valid_node_id = str(valid_node.id)
         all_nodes_related_to_this_node = self._db.query(Node).filter(Node.node_relationships.has_key(valid_node_id)).all()
