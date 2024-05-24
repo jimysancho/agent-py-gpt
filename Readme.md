@@ -17,7 +17,7 @@
     - - [Without Relationships in the context](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#231-without-the-relationships)
 
     - - [With Relationships in the context](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#232-with-the-relationships-in-the-context)
-    
+
     - - [Differences](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#233-differences)
 
 [Main files](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#3-main-files)
@@ -277,9 +277,9 @@ Another agent could be used here to decide if the relationship is relevant to th
 
 # 3. Main files
 
-- `main.ipynb`: here you can find end-to-end explanations of how this multi-agent project is implemented. 
-- `0_subjects.ipynb`: an example of a question with 0 subjects answered. 
-- `relationship_retriever_example.ipynb`: to showcase how the relationships can be leveraged to improve the results.  
+- [`main.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/main.ipynb): here you can find end-to-end explanations of how this multi-agent project is implemented. 
+- [`0_subjects.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/0_subjects.ipynb): an example of a question with 0 subjects answered. 
+- [`relationship_retriever_example.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/relationship_retriever_example.ipynb): to showcase how the relationships can be leveraged to improve the results.  
 
 # 4. How to use it? 
 
