@@ -208,71 +208,63 @@ def filter_relationships(self, threshold: float) -> Dict[str, List[Node]] | Dict
 
 - `Query`: How do the methods: _check_common_parent_nodes, _check_relationships_of_retrieved_nodes, return_nodes_after_apply_threshold_filter and return_nodes_with_score_after_apply_threshold_filter work together to improve the result of the function query_vector_database?
 - `Answer`: 
-
+```md
 I'd be happy to help you understand how these methods work together!
 To answer your question, let's focus on what these methods do:
-1. `_check_common_parent_nodes()`: This method seems to analyze the retrieved nodes and calculates some frequency values
+1. _check_common_parent_nodes(): This method seems to analyze the retrieved nodes and calculates some frequency values
 (parent_node_freq and file_node_freq) based on their relationships.
-2. `_check_relationships_of_retrieved_nodes(depth=3)`: This method likely checks the relationships between the retrieved nodes, possibly up to
+2. _check_relationships_of_retrieved_nodes(depth=3): This method likely checks the relationships between the retrieved nodes, possibly up to
 a certain depth (in this case, 3).
-3. `return_nodes_after_apply_threshold_filter()`: This method appears to filter the retrieved nodes based on some threshold criteria,
+3. return_nodes_after_apply_threshold_filter(): This method appears to filter the retrieved nodes based on some threshold criteria,
 perhaps related to their scores.
-4. `return_nodes_with_score_after_apply_threshold_filter()`: Similarly, this method filters the nodes with their corresponding scores, likely applying the
+4. return_nodes_with_score_after_apply_threshold_filter(): Similarly, this method filters the nodes with their corresponding scores, likely applying the
 same threshold as above.
 Now, let's consider how these methods work together:
-The `_check_common_parent_nodes()` and `_check_relationships_of_retrieved_nodes()` methods seem to analyze the relationships between the retrieved nodes. The
+The _check_common_parent_nodes() and _check_relationships_of_retrieved_nodes() methods seem to analyze the relationships between the retrieved nodes. The
 results from these methods (parent_node_freq and file_node_freq) are then used in some way to improve
-the result of the `query_vector_database` function.
-The `return_nodes_after_apply_threshold_filter()` and `return_nodes_with_score_after_apply_threshold_filter()` methods, on the other hand, seem to refine the retrieved nodes
+the result of the query_vector_database function.
+The return_nodes_after_apply_threshold_filter() and return_nodes_with_score_after_apply_threshold_filter() methods, on the other hand, seem to refine the retrieved nodes
 based on their scores. The results from these methods are also used to improve the
 final result.
 In summary, these methods work together by:
 - Analyzing relationships between retrieved nodes
 - Refining nodes based on their scores and threshold criteria
-- Improving the overall result of the `query_vector_database` function
+- Improving the overall result of the query_vector_database function
 By combining these methods, the function can likely improve its accuracy in retrieving relevant nodes
 for a given query.
-
+```
 
 #### 2.3.2 With the relationships in the context
 
 - `Query`: How do the methods: _check_common_parent_nodes, _check_relationships_of_retrieved_nodes, return_nodes_after_apply_threshold_filter and return_nodes_with_score_after_apply_threshold_filter work together to improve the result of the function query_vector_database?
 
 - `Answer`: 
-
+```md
 A Python expert!
-Let's break down how these methods work together to improve the result of the `query_vector_database`
-function:
-**Overview**
-The `NodePostProccesor` class is designed to process and filter nodes from a database. The four
-methods you mentioned are part of this processing pipeline.
-**Method 1: `_check_common_parent_nodes`**
+Let's break down how these methods work together to improve the result of the query_vector_database function:
+- Overview
+The NodePostProccesor class is designed to process and filter nodes from a database. The four methods you mentioned are part of this processing pipeline.
+1. Method 1: _check_common_parent_nodes
 This method takes the retrieved nodes and checks for common parent nodes (methods) and files.
 It returns a list of tuples containing the parent node IDs and their frequencies.
-**Method 2: `_check_relationships_of_retrieved_nodes`**
-This method recursively explores the relationships between nodes, starting from each node in the `retrieved_nodes`
-list. For each node, it checks its relationships (i.e., child nodes) and adds them to
-a list. The recursion depth is controlled by the `depth` parameter.
-**Method 3: `return_nodes_after_apply_threshold_filter`**
-This method simply returns the filtered nodes (`_retrieved_nodes`) that passed the threshold score filter.
-**Method 4: `return_nodes_with_score_after_apply_threshold_filter`**
-This method returns the original nodes with scores (`_retrieved_nodes_score`) that passed the threshold score filter.
+2. Method 2: _check_relationships_of_retrieved_nodes
+This method recursively explores the relationships between nodes, starting from each node in the retrieved_nodes list. For each node, it checks its relationships (i.e., child nodes) and adds them to a list. The recursion depth is controlled by the depth parameter.
+3. Method 3: return_nodes_after_apply_threshold_filter. This method simply returns the filtered nodes (_retrieved_nodes) that passed the threshold score filter.
+4. Method 4: return_nodes_with_score_after_apply_threshold_filter. This method returns the original nodes with scores (_retrieved_nodes_score) that passed the threshold score filter.
 This is useful for retaining the original node scores for further processing or analysis.
-**How they work together**
-Here's how these methods contribute to improving the result of `query_vector_database`:
-1. `_check_common_parent_nodes`: By identifying common parent nodes and files, you can prune the node graph
-and focus on more relevant nodes.
-2. `_check_relationships_of_retrieved_nodes`: This method recursively explores relationships between nodes, which helps to identify more connected
-nodes (e.g., methods with similar functionality).
-3. `return_nodes_after_apply_threshold_filter` and `return_nodes_with_score_after_apply_threshold_filter`: These methods filter out nodes that don't meet the threshold score,
-ensuring only relevant nodes are retained.
+
+- How they work together
+Here's how these methods contribute to improving the result of query_vector_database:
+1. _check_common_parent_nodes: By identifying common parent nodes and files, you can prune the node graph and focus on more relevant nodes.
+2. _check_relationships_of_retrieved_nodes: This method recursively explores relationships between nodes, which helps to identify more connected nodes (e.g., methods with similar functionality).
+3. return_nodes_after_apply_threshold_filter and return_nodes_with_score_after_apply_threshold_filter: These methods filter out nodes that don't meet the threshold score, ensuring only relevant nodes are retained.
 By combining these methods, you can:
 * Prune the node graph to focus on more relevant nodes
 * Identify connected nodes (e.g., methods with similar functionality)
 * Retain only nodes that meet a certain threshold score
-This processing pipeline helps to improve the result of `query_vector_database` by filtering out irrelevant nodes
+This processing pipeline helps to improve the result of query_vector_database by filtering out irrelevant nodes
 and retaining only the most meaningful ones.
-
+```
 #### 2.3.3 Differences?
 
 Clearly! As we can see, without the relationships the LLM just guess what the functions do, whereas when the relationships are used, it actually has the definition of the function, so it does not have to guess anymore!
