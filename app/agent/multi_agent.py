@@ -6,6 +6,8 @@ from app.retrievers.similarity_retriever import SimilarityRetriever
 from app.agent.types import QuestionType, ContextType, Output
 from app.printer import Printer
 
+from pydantic import ValidationError
+
 from typing import (List, 
                     Dict, 
                     Any, 
@@ -42,7 +44,7 @@ class MultiAgent:
             
             try:
                 output = self._parse_answer_into_output(question=kwargs['query'], answer=answer)
-            except SyntaxError:
+            except (SyntaxError, ValidationError):
                 printer.print_red("Bad parsing from the llm. Trying again...")
                 answer = await agent.acall(**kwargs) if output is None else await agent.acall(**output.model_dump())
                 try:
