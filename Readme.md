@@ -22,6 +22,11 @@
 
 [Main files](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#3-main-files)
 
+- [Notebooks examples](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#31-notebook-examples) 
+
+- [Classes](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#31-classes)
+
+
 [How to use it](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#4-how-to-use-it)
 
 [Comments](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#comments)
@@ -277,9 +282,16 @@ Another agent could be used here to decide if the relationship is relevant to th
 
 # 3. Main files
 
+## 3.1 Notebooks examples
 - [`main.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/main.ipynb): here you can find end-to-end explanations of how this multi-agent project is implemented. 
 - [`0_subjects.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/0_subjects.ipynb): an example of a question with 0 subjects answered. 
-- [`relationship_retriever_example.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/relationship_retriever_example.ipynb): to showcase how the relationships can be leveraged to improve the results.  
+- [`relationship_retriever_example.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/relationship_retriever_example.ipynb): to showcase how the relationships can be leveraged to improve the results. 
+
+## 3.2 Classes
+
+- [Retrievers](https://github.com/jimysancho/agent-py-gpt/tree/agent-main/app/retrievers): The implementation of all of the retrievers. 
+- [Agents](https://github.com/jimysancho/agent-py-gpt/tree/agent-main/app/agent): LLMs utils, including the different agents. 
+- [Prompts](https://github.com/jimysancho/agent-py-gpt/tree/agent-main/app/prompts): The prompts used to "train" the agents and to answer the queries. 
 
 # 4. How to use it? 
 
