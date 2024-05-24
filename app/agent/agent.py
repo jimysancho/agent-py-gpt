@@ -14,10 +14,12 @@ printer = Printer()
 class BaseAgent(ABC):
     
     def __init__(self, 
-                 instruction: Prompt, verbose: bool = False):
+                 instruction: Prompt, 
+                 verbose: bool = False, 
+                 url: str | None = None):
         
         self._instruction = instruction
-        self._client = LlamaClient()
+        self._client = LlamaClient(url=url)
         self._verbose = verbose
         
     @abstractmethod
@@ -31,8 +33,8 @@ class BaseAgent(ABC):
 
 class QuestionTypeAgent(BaseAgent):
     
-    def __init__(self, instruction: Prompt, verbose: bool = False):
-        super().__init__(instruction=instruction, verbose=verbose)
+    def __init__(self, instruction: Prompt, verbose: bool = False, url: str | None = None):
+        super().__init__(instruction=instruction, verbose=verbose, url=url)
         
     async def acall(self, **kwargs) -> str | None:
         query = self._instruction.format_prompt(prompt=self._instruction.prompt, **kwargs).prompt
@@ -58,8 +60,8 @@ class QuestionTypeAgent(BaseAgent):
 class ContextTypeAgent(BaseAgent):
     
     def __init__(self, 
-                 instruction: Prompt, verbose: bool = False):
-        super().__init__(instruction=instruction, verbose=verbose)
+                 instruction: Prompt, verbose: bool = False, url: str | None = None):
+        super().__init__(instruction=instruction, verbose=verbose, url=url)
         
     async def acall(self, **kwargs) -> str | None:
         query = self._instruction.format_prompt(prompt=self._instruction.prompt, **kwargs).prompt
