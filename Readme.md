@@ -1,4 +1,31 @@
-# Chat with your Python Repository in an advanced way
+# Table of Contents
+[Introduction](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#chat-with-your-python-repository-in-an-advanced-way)
+
+[Chunking and Node Models](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#1-chunking-and-node-models)
+
+[Tools](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#2-tools)
+
+- [SimpleRetriever](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#21-simpleretriever)
+    - - [Complex Case](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#211-complex-case)
+- [GeneralRetriever](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#22-generalretriever)
+    - - [One Subject](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#221-one-subject)
+    - - [Zero Subjects](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#222-zero-subjects)
+- [RelationshipRetriever](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#23-relationshipretriever-optional-or-mandatory)
+    - - [Without Relationships in the context](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#231-without-the-relationships)
+    - - [With Relationships in the context](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#232-with-the-relationships-in-the-context)
+    - - [Differences](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#233-differences)
+
+[Main files](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#3-main-files)
+
+[How to use it](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#4-how-to-use-it)
+
+[Comments](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#comments)
+
+[Problems](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#problems)
+
+- [Pgvector](https://github.com/jimysancho/agent-py-gpt/tree/agent-main?tab=readme-ov-file#1-pgvector-on-docker)
+
+# Chat with your python repository in an advanced-way
 
 The idea of this project is to use Agents to improve the RAG pipeline over python repositories. Why over python repositories? Because I'm going to use the `rag-pychunk` library to obtain better relationships between them. Also, this project uses Postgresql to store the vectors and documents, but you can implement the same logic in any database. The important part is the parsing form *rag-pychunk-Nodes* to your model, maintaining and keeping the important information (as we'll see in section 2, we'll try to get the node by matching some values in the database). 
 
