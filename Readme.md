@@ -1,6 +1,6 @@
 # Chat with your Python Repository in an advanced way
 
-The idea of this project is to use Agents to improve the RAG pipeline over python repositories. Why over python repositories? Because I'm going to use the `rag-pychunk` library to obtain better relationships between them. 
+The idea of this project is to use Agents to improve the RAG pipeline over python repositories. Why over python repositories? Because I'm going to use the `rag-pychunk` library to obtain better relationships between them. Also, this project uses Postgresql to store the vectors and documents, but you can implement the same logic in any database. The important part is the parsing form *rag-pychunk-Nodes* to your model, maintaining and keeping the important information (as we'll see in section 2, we'll try to get the node by matching some values in the database). 
 
 In order to use agents, I've classified the possible queries into different categories: 
 - Simple vs Complex. 
@@ -243,7 +243,13 @@ Clearly! As we can see, without the relationships the LLM just guess what the fu
 
 Another agent could be used here to decide if the relationship is relevant to the query or not. 
 
-# 3. How to use it? 
+# 3. Main files
+
+- `main.ipynb`: here you can find end-to-end explanations of how this multi-agent project is implemented. 
+- `0_subjects.ipynb`: an example of a question with 0 subjects answered. 
+- `relationship_retriever_example.ipynb`: to showcase how the relationships can be leveraged to improve the results.  
+
+# 4. How to use it? 
 
 1. You'll need llama3 running
 2. In the terminal: ```uvicorn app.main:app --reload --host 0.0.0.0 --port 3000``` (it is not include in the docker because of incompatibities with rag-pychunk) 
