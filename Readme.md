@@ -54,6 +54,35 @@ In order to classify the query, I've developed two different types of agents, wh
 
 - Tool returned: **`SimilarityRetriever`**
 
+When classifying between simple and complex multiple things can happen: 
+- One or zero subjects are detected yet the agent classify the question as complex. 
+- Multiple subjects but the agent classify the question as simple. 
+
+In both of this cases, a retry will be applied. We want to get a coherent answer, which means: 
+- Simple $\implies$ 0 or 1 subject. 
+- Complex $\implies$ multiple subjects. 
+
+This is controlled with `pydantic validators`:
+
+```python
+class Output(BaseModel):
+    
+    query: str
+    reasoning: str
+    question_type: str
+    subject: Set[str | None]
+    valid: Optional[bool] = True
+    
+    @model_validator(mode='before')
+    def coherence_between_question_type_and_length_of_subjects(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+        subject, question_type = values.get('subject'), values.get('question_type')
+        if question_type not in ('simple', 'complex'):
+            return values
+        if (len(subject) <= 1 and question_type != 'simple') or (len(subject) > 1 and question_type != 'complex'):
+            values['valid'] = False
+        return values    
+```
+
 
 2. **General vs Particular Agent**. This agent will take the output from the first agent only if the question type was: **`Simple`** and classify the question into one of two categories: 
 
@@ -70,7 +99,7 @@ To chunk the different files I'll be using *rag-pychunk*, which is a library I'v
 
 
 **Node Model**
-```
+```python
 class Node(Base):
 
     __tablename__ = "node"
@@ -99,7 +128,7 @@ class Node(Base):
 ```
 
 **NodeMetadata Model**
-```
+```python
 class NodeMetadata(Base):
     __tablename__ = "node_metadata"
     node_id = Column(UUID(as_uuid=True), ForeignKey("node.id", ondelete="CASCADE"), primary_key=True)
@@ -138,7 +167,7 @@ This retriever will be used when the query is identified as *particular* or *com
 
 For each subject, we'll try to get the Node in which the subject appears directly from the database, since in the column *node_metadata* we are storing either the method, function or class name of the node: 
 
-```
+```python
 for subject in subjects: # complex case --> multiple subjects
             
   # we try to find the node in case it is a method, function or class by looking it up in the database directly
@@ -155,7 +184,7 @@ If this fails, we'll get the nodes via similarity search. Either way, we'll get 
 
 #### 2.1.1 Complex case
 In case we have multiple subjects and the node can't be obtained directly from the database we want to maximise the probability of getting the correct nodes via similarity search. In order to do so, we modify the query like this: 
-```
+```python
 query_to_embed, = (query.replace(subject, "") if subject in query else query.lower().replace(subject, "")) if len(subjects) > 1 else (query,)
 ```
 
@@ -168,7 +197,7 @@ With this tool we want to answer queries like: "Will changing X break something?
 #### 2.2.1 One subject
 We need to get the proper node and everything that is depending on it. Again, we'll try to get the node directly from the database based on the subject name and if it does not succeed then via similarity search. Besides that, we also want to get all of the nodes whose values in the column: *node_relationships* have the id of this node. Why? Because that means that in those nodes, the retrieved node appears in some way, which means that changing the retrieved node would affect those nodes as well. 
 
-```
+```python
 all_nodes_related_to_this_node = self._db.query(Node).filter(Node.node_relationships.has_key(str(valid_node.id))).all()
 ```
 
@@ -184,7 +213,7 @@ This retriever is not available for the agent to return. We'll need to use it as
 
 With this "retriever" the relationshps will be filtered to only keep those similar to the retrieved nodes given a threshold: 
 
-```
+```python
 def filter_relationships(self, threshold: float) -> Dict[str, List[Node]] | Dict:
     filtered_relationships = {}
     for node in self._nodes:
