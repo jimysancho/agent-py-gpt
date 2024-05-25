@@ -304,9 +304,9 @@ Another agent could be used here to decide if the relationship is relevant to th
 # 3. Main files
 
 ## 3.1 Notebooks examples
-- [`main.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/main.ipynb): here you can find end-to-end explanations of how this multi-agent project is implemented. 
-- [`0_subjects.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/0_subjects.ipynb): an example of a question with 0 subjects answered. 
-- [`relationship_retriever_example.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/relationship_retriever_example.ipynb): to showcase how the relationships can be leveraged to improve the results. 
+- [`main.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/notebooks/main.ipynb): here you can find end-to-end explanations of how this multi-agent project is implemented. 
+- [`0_subjects.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/notebooks/0_subjects.ipynb): an example of a question with 0 subjects answered. 
+- [`relationship_retriever_example.ipynb`](https://github.com/jimysancho/agent-py-gpt/blob/agent-main/notebooks/relationship_retriever_example.ipynb): to showcase how the relationships can be leveraged to improve the results. 
 
 ## 3.2 Classes
 
