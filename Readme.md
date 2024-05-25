@@ -43,7 +43,7 @@ In order to use agents, I've classified the possible queries into different cate
 - Simple vs Complex. 
 - If Simple: Particular vs Complex. 
 
-What decides into which category the query falls into is the number of *subjects*. `What is a subject?` $\implies$ Any Python function, method, class or block of code. 
+What decides which category the query falls into is the number of *subjects*. `What is a subject?` $\implies$ Any Python function, method, class or block of code. 
 
 In order to classify the query, I've developed two different types of agents, which will return different types of tools depending on the task. Both of the agents have been trained using `prompt engineer few shot example` since the task is "straightforward", altough we'll see that it can get tricky and complicated depending on the query. The agents are:  
 
@@ -62,11 +62,11 @@ In order to classify the query, I've developed two different types of agents, wh
 
 - Tool returned: **`SimilarityRetriever`** (for particular) or **`GeneralRetriever`** (for general)
 
-When the agent pipeline returns a tool, I'll use that tool to obtained the nodes which will be used to fed the LLM. Let's see the hole process. 
+When the agent pipeline returns a tool, I'll use that tool to obtain the nodes which will be used to fed the LLM. Let's see the hole process. 
 
 ## 1. Chunking and Node models
 
-To chunk the different files I'll be using *rag-pychunk*, which is a library I've developed to leverage python programming language syntax improving the chunking and relationship finding. You can learn more about that here: [rag-pychunk](https://github.com/jimysancho/rag-pychunk)
+To chunk the different files I'll be using *rag-pychunk*, which is a library I've developed to leverage python programming language syntax improving the chunking and relationships between those chunks. You can learn more about that here: [rag-pychunk](https://github.com/jimysancho/rag-pychunk)
 
 
 **Node Model**
@@ -119,7 +119,7 @@ In the node_relationships column of the Node Model will be stored in the form of
 ```
 {node_id: [lines in which the node appears]}
 ```
-where node_id is the nodes that appears in an specific node. For example: 
+where node_id is the id of the node that appears in an specific node. For example: 
 ```
 text_of_node_1 = "def hello(): ..."
 text_of_node_2 = "def bye(): hello(); print("bye!")"
@@ -130,11 +130,11 @@ These two columns will be leveraged to improve the retrieval as we'll in the nex
 
 ## 2. Tools
 
-What the agent will return depending on the query. There are 2 types of retriever that the agent will return, but there is an additional one which can be used to improve the results. 
+What's a tool? $\implies$ What the agent will return depending on the query. There are 2 types of retriever that the agent will return, but there is an additional one which can be used to improve the results. 
 
 ### 2.1 SimpleRetriever
 
-This retriever will be used when the query is identified as *particular* or *complex*. Depending on this case, the retrieval will be done differently. 
+This retriever will be used when the query is identified as *particular* or *complex*. Depending on each case, the retrieval will be done differently. 
 
 For each subject, we'll try to get the Node in which the subject appears directly from the database, since in the column *node_metadata* we are storing either the method, function or class name of the node: 
 
@@ -159,14 +159,14 @@ In case we have multiple subjects and the node can't be obtained directly from t
 query_to_embed, = (query.replace(subject, "") if subject in query else query.lower().replace(subject, "")) if len(subjects) > 1 else (query,)
 ```
 
-That way, only the subject name will appear in the query for each subject, removing the similarity with other nodes. 
+That way, only one subject name will appear in the query. For each subject, only itself will appear int the query by removing the other subjects, decreasing the similarity with other nodes. 
 
 ### 2.2 GeneralRetriever
 
 With this tool we want to answer queries like: "Will changing X break something?", "What will happen If I change this parameter of the function X to...?", "Is there any errors in the repo?"
 
 #### 2.2.1 One subject
-So, we need to get the proper node and everything that is depending on it. Again, we'll try to get the node directly from the database based on the subject name and if it does not succeed via similarity search. Besides that, we also want to get all of the nodes which in the column: *node_relationships* has the id of this node.
+We need to get the proper node and everything that is depending on it. Again, we'll try to get the node directly from the database based on the subject name and if it does not succeed then via similarity search. Besides that, we also want to get all of the nodes whose values in the column: *node_relationships* have the id of this node. Why? Because that means that in those nodes, the retrieved node appears in some way, which means that changing the retrieved node would affect those nodes as well. 
 
 ```
 all_nodes_related_to_this_node = self._db.query(Node).filter(Node.node_relationships.has_key(str(valid_node.id))).all()
