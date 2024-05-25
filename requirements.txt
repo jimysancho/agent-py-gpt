@@ -6,3 +6,6 @@ psycopg2-binary
 pydantic 
 sqlalchemy
 rag-pychunk
+streamlit
+llama-index-embeddings-huggingface==0.2.0
+numpy
